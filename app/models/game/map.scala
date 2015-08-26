@@ -1,22 +1,24 @@
-package game
+  package game
 
-import play.api._
+  import play.api._
 
-import scala.math._
-import scala.math.abs
+  import scala.math._
+  import scala.math.abs
 
-object MapManager {
-  case class WorldMap(tileMap: Map[Valid, Charac])
-  case class Charac(terrain: Terrain.TerrainType)
+  object MapManager {
+    case class WorldMap(tileMap: Map[Valid, Charac])
+    case class Charac(terrain: Terrain.TerrainType)
 
-  type Tile = (Valid, Charac)
+    type Tile = (Valid, Charac)
 
-  val Water = Terrain.Terrain("Water", 5, "#007FFF", 1)
-  val Grass = Terrain.Terrain("Grass", 1, "#00FF7F", 3)
-  val Mountain = Terrain.Terrain("Mountain", 3 , "#603F00", 4)
-  val Sand = Terrain.Terrain("Sand", 1, "#FFFF00", 2)
+  val Water = Terrain.Terrain("Water", 5, "#007FFF", 3)
+  val Grass = Terrain.Terrain("Grass", 1, "#00FF7F", 6)
+  val Mountain = Terrain.Terrain("Mountain", 3 , "#603F00", 8)
+  val Rock = Terrain.Terrain("Rock", 4, "#888888", 9)
+  val Snow = Terrain.Terrain("High-Snow", 5, "#EEEEEE", 10)
+  val Sand = Terrain.Terrain("Sand", 1, "#FFFF00", 4)
 
-  val terrainListG = List(Water, Grass, Mountain, Sand)
+  val terrainListG = List(Water, Grass, Mountain, Sand, Snow, Rock)
 
   sealed trait Coordonee
   case class Valid(x: Int, y: Int, z: Int) extends Coordonee
@@ -50,17 +52,20 @@ object MapManager {
 
   def determineTerrain(neigh: List[Terrain.TerrainType], terrainList: List[Terrain.Terrain]): Terrain.Terrain = {
     val redeableTerrain = neigh.map(Terrain.getHigh(_)).collect({case Some(high) => high})
-    val moyHigh = math.round(redeableTerrain.sum.toDouble / redeableTerrain.length.toDouble)
+    val moyHigh: Double = math.round(redeableTerrain.sum.toDouble / redeableTerrain.length.toDouble)
 
-    val flatTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if (ter.high == moyHigh) => ter}).headOption.getOrElse(Terrain.Terrain("Nothing", 0 , "#FFF", 0))
+    val flatTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if (ter.high >= moyHigh) => ter}).sortBy(_.high).headOption.getOrElse(Terrain.Terrain("Nothing", 0 , "#F00", 0))
   
-    val upperTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if(ter.high  == moyHigh + 1) => ter}).headOption.getOrElse(flatTile)
-    val downerTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if(ter.high == moyHigh - 1) => ter}).headOption.getOrElse(flatTile)
+    val upperTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if(ter.high > moyHigh) => ter}).sortBy(_.high).headOption.getOrElse(flatTile)
+    val downerTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if(ter.high < moyHigh) => ter}).sortWith(_.high > _.high).headOption.getOrElse(flatTile)
 
     val salt = math.random
 
-    if(salt < 0.2) downerTile
-    else if(salt >= 0.2 && salt <= 0.7) flatTile
+    val downP = 0 + moyHigh / (terrainList.maxBy(_.high).high) / 2
+    val upP =  1 - (1 -  moyHigh / (terrainList.maxBy(_.high).high))/2
+
+    if(salt < downP) downerTile
+    else if(salt >= downP && salt <= upP) flatTile
     else upperTile
   }
 
