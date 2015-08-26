@@ -40,7 +40,6 @@ object MapManager {
     val listNeig = onlyNeig.tileMap.toList
 
     if (listNeig.map(_._2.terrain).contains(Terrain.OutOfBound)) {
-      Logger.debug("Water on " + tile.toString)
       addTile(wMap, tile, Charac(terrainList.minBy(_.high)), true)
     }
     else {
