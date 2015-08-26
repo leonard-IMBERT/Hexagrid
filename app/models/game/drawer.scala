@@ -20,9 +20,11 @@ object Drawer {
     ((x,y), tile._2)
   }
 
-  def matriceToDrawMatrice(matrice: Matrice): List[((Long, Long), Char)] = {
+  def matriceToDrawMatrice(matrice: Matrice): List[((Long, Long), String)] = {
     matrice.toList.map((tuple) => ((math.round(tuple._1._1), math.round(tuple._1._2)), Terrain.symb(tuple._2.terrain)))
   }
+
+  
 
   def drawMap(matrice: Matrice): String = {
     val roundedMatrice = matriceToDrawMatrice(matrice)
@@ -31,11 +33,11 @@ object Drawer {
     
     val maximalValue = roundedPositiveMatrice.map(tuple => math.max(tuple._1._1, tuple._1._2)).max
 
-    def draw(acc: String, ite: Long, stop: Long, matrice: List[((Long, Long), Char)]): String = {
+    def draw(acc: String, ite: Long, stop: Long, matrice: List[((Long, Long), String)]): String = {
       if(ite > stop) acc
       else {
         val row = matrice.collect({case ((x,y), c) if(y == ite) => (x, c)}).toMap
-        def drawRow(acc: String, ite2: Long, rowD: Map[Long, Char]): String = {
+        def drawRow(acc: String, ite2: Long, rowD: Map[Long, String]): String = {
           if(ite2 == stop) acc + row.get(ite2).getOrElse(' ') + "\n"
           else {
             drawRow(acc + row.get(ite2).getOrElse(' '), ite2 + 1, rowD)

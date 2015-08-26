@@ -13,7 +13,7 @@ canvas.setAttribute('width', '400');
 canvas.setAttribute('height', '400');
 
 function draw_hex(ctx, x, y, size, color) {
-  ctx.fillStyle = "#F0F0F0";
+  ctx.fillStyle = color;
   ctx.strokeStyle = "#000";
   ctx.beginPath();
   ctx.moveTo(x,y);
@@ -39,7 +39,8 @@ function hex_corner(center_x, center_y, size, i) {
 }
 
 @for(a <- game.Drawer.drawMatrice(world).toList){
-  draw_hex(ctxG, @a._1._1, @a._1._2, 10, 2);
+  @Logger.debug(game.Terrain.symb(a._2.terrain))
+  draw_hex(ctxG, @a._1._1, @a._1._2, 10, "@game.Terrain.symb(a._2.terrain)");
 }
 
 </script>

@@ -8,7 +8,7 @@ import game._
 class Application extends Controller {
 
   def home = Action { implicit request =>
-    Ok(views.html.ascii(MapManager.generateWholeMap(1)))
+    Ok(views.html.ascii(MapManager.generateWholeMap(12)))
   }
 
 }

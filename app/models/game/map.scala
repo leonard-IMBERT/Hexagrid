@@ -1,5 +1,7 @@
 package game
 
+import play.api._
+
 import scala.math._
 import scala.math.abs
 
@@ -9,10 +11,10 @@ object MapManager {
 
   type Tile = (Valid, Charac)
 
-  val Water = Terrain.Terrain("Water", 5, '~', 0)
-  val Grass = Terrain.Terrain("Grass", 1, '"', 2)
-  val Mountain = Terrain.Terrain("Mountain", 3 , 'M', 3)
-  val Sand = Terrain.Terrain("Sand", 1, 'S', 1)
+  val Water = Terrain.Terrain("Water", 5, "#007FFF", 1)
+  val Grass = Terrain.Terrain("Grass", 1, "#00FF7F", 3)
+  val Mountain = Terrain.Terrain("Mountain", 3 , "#603F00", 4)
+  val Sand = Terrain.Terrain("Sand", 1, "#FFFF00", 2)
 
   val terrainListG = List(Water, Grass, Mountain, Sand)
 
@@ -37,7 +39,10 @@ object MapManager {
     val onlyNeig = removeTile(neigh, tile)
     val listNeig = onlyNeig.tileMap.toList
 
-    if (listNeig.map(_._2.terrain).contains(Terrain.OutOfBound)) addTile(wMap, tile, Charac(terrainList.minBy(_.high)), false)
+    if (listNeig.map(_._2.terrain).contains(Terrain.OutOfBound)) {
+      Logger.debug("Water on " + tile.toString)
+      addTile(wMap, tile, Charac(terrainList.minBy(_.high)), true)
+    }
     else {
       val tmp = addTile(wMap, tile, Charac(determineTerrain(listNeig.map(_._2.terrain), terrainList)), true)
       tmp
@@ -48,7 +53,7 @@ object MapManager {
     val redeableTerrain = neigh.map(Terrain.getHigh(_)).collect({case Some(high) => high})
     val moyHigh = math.round(redeableTerrain.sum.toDouble / redeableTerrain.length.toDouble)
 
-    val flatTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if (ter.high == moyHigh) => ter}).headOption.getOrElse(Terrain.Terrain("Nothing", 0 , 'B', 0))
+    val flatTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if (ter.high == moyHigh) => ter}).headOption.getOrElse(Terrain.Terrain("Nothing", 0 , "#FFF", 0))
   
     val upperTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if(ter.high  == moyHigh + 1) => ter}).headOption.getOrElse(flatTile)
     val downerTile: Terrain.Terrain = terrainList.collect({case ter: Terrain.Terrain if(ter.high == moyHigh - 1) => ter}).headOption.getOrElse(flatTile)
