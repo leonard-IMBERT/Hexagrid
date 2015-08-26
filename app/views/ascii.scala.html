@@ -3,14 +3,15 @@
 @import play.api._
 
 @base {
+<h1 class="title">Hexagrid</h1>
 <canvas id="map">
 </canvas> 
 <script>
 'use strict'
 var canvas = window.document.getElementById("map");
 var ctxG = canvas.getContext("2d");
-canvas.setAttribute('width', '400');
-canvas.setAttribute('height', '400');
+canvas.setAttribute('width', '800');
+canvas.setAttribute('height', '800');
 
 function draw_hex(ctx, x, y, size, color) {
   ctx.fillStyle = color;

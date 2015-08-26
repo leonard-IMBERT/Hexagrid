@@ -1,5 +1,21 @@
+body {
+background-color: #000;
+}
+
 #map {
-height: 400px;
-width: 400px;
+height: 800px;
+width: 800px;
 object-fit: cover;
+}
+
+#main {
+margin-right: auto;
+margin-left: auto;
+width: 800px;
+}
+
+.title{
+text-align: center;
+font: "Lucida Console", Monaco, monospace;
+color: #FFF; 
 }

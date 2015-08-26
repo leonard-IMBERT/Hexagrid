@@ -10,13 +10,13 @@ object Drawer {
 
   def drawMatrice(wMap: MapManager.WorldMap): Matrice = {
     wMap.tileMap.toList.foldLeft(Map(): Matrice)((matrice, tile: MapManager.Tile) => {
-      matrice + tileToMatrice(tile, 10)
+      matrice + tileToMatrice(tile, 10, 400, 400)
     })
   }
 
-  def tileToMatrice(tile: MapManager.Tile, zoom: Double): ((Double, Double), MapManager.Charac) = {
-    val x = (zoom * ((math.sqrt(3) * tile._1.z) + (math.sqrt(3) * tile._1.y)/2)) + 200
-    val y = (zoom * 3/2 * tile._1.y) + 200
+  def tileToMatrice(tile: MapManager.Tile, zoom: Double, decX: Int, decY: Int): ((Double, Double), MapManager.Charac) = {
+    val x = (zoom * ((math.sqrt(3) * tile._1.z) + (math.sqrt(3) * tile._1.y)/2)) + decX
+    val y = (zoom * 3/2 * tile._1.y) + decY
     ((x,y), tile._2)
   }
 
