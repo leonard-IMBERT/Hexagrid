@@ -19,12 +19,9 @@ function draw_hex(ctx, x, y, size, color) {
   ctx.beginPath();
   ctx.moveTo(x,y);
   ctx.moveTo(hex_corner(x,y,size,0).x,hex_corner(x,y,size,0).y);
-  ctx.lineTo(hex_corner(x,y,size,1).x,hex_corner(x,y,size,1).y);
-  ctx.lineTo(hex_corner(x,y,size,2).x,hex_corner(x,y,size,2).y);
-  ctx.lineTo(hex_corner(x,y,size,3).x,hex_corner(x,y,size,3).y);
-  ctx.lineTo(hex_corner(x,y,size,4).x,hex_corner(x,y,size,4).y);
-  ctx.lineTo(hex_corner(x,y,size,5).x,hex_corner(x,y,size,5).y);
-  ctx.lineTo(hex_corner(x,y,size,0).x,hex_corner(x,y,size,0).y);
+  for(var i = 1; i <= 5; i++) {
+    ctx.lineTo(hex_corner(x,y,size,i).x,hex_corner(x,y,size,i).y);
+  }
   ctx.closePath();
   ctx.fill();
   ctx.stroke();
